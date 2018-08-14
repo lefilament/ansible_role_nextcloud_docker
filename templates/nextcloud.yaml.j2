@@ -65,8 +65,8 @@ services:
     restart: unless-stopped
     environment:
       - domain={{ cloud_url|replace(".","\\\.") }}
-      - username=admin
-      - password=adminSecurPass!1
+      - username={{ cloud_collabora_admin_user }}
+      - password={{ cloud_collabora_admin_pass }}
       - dictionaries=fr_FR
       - logging=warning
       - ssl=false
