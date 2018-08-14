@@ -1,0 +1,67 @@
+---
+
+## Install Nextcloud docker
+- name: Install nextcloud docker
+  template:
+    src: nextcloud.yaml.j2
+    dest: /home/docker/nextcloud.yaml
+    owner: root
+    group: root
+    mode: 0400
+
+- name: start nextcloud docker
+  docker_service:
+    project_src: /home/docker/
+    files: nextcloud.yaml
+    project_name: nextcloud
+  async: 120
+  poll: 10
+  tags: start_docker
+
+## Configure OnlyOffice application
+- name: Set trusted domain to nextcloud for collaborative documents
+  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set trusted_domains 2 --value="nextcloud"
+  when: cloud_onlyoffice is defined
+
+- name: Install OnlyOffice app
+  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings app:enable onlyoffice
+  when: cloud_onlyoffice is defined
+
+- name: Set OnlyOffice URL
+  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice DocumentServerUrl --value="https://{{ cloud_docs_url}}"
+  when: cloud_onlyoffice is defined
+
+- name: Set internal OnlyOffice URL
+  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice DocumentServerInternalUrl --value="http://onlyoffice/"
+  when: cloud_onlyoffice is defined
+
+- name: Set internal NextCloud URL
+  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice StorageUrl --value="http://nextcloud/"
+  when: cloud_onlyoffice is defined
+
+
+## Install Nextcloud backup docker
+- name: Install nextcloud backup compose file
+  template:
+    src: backup.yaml.j2
+    dest: /home/docker/backups/backup-nextcloud.yaml
+    owner: root
+    group: root
+    mode: 0400
+
+- name: Copy docker file for mysql duplicity
+  copy:
+    src: Dockerfile
+    dest: /home/docker/backups/Dockerfile-nextbak
+    owner: root
+    group: root
+    mode: 0644
+
+- name: add cron job to run backup every week
+  cron:
+    name: backup nextcloud
+    minute: 43
+    hour: 2
+    weekday: 7
+    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-nextcloud.yaml run --rm backup_nextcloud 
+  when: inventory_hostname in groups['maintenance_contract']

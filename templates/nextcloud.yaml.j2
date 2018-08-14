@@ -1,0 +1,103 @@
+version: '3'
+
+services:
+  nextcloud:
+    image: nextcloud
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD={{ cloud_db_pass }}
+      - MYSQL_HOST=db
+      - NEXTCLOUD_ADMIN_USER={{ cloud_admin }}
+      - NEXTCLOUD_ADMIN_PASSWORD={{ cloud_admin_pass }}
+    volumes:
+      - nextcloud:/var/www/html:z
+    networks:
+      default:
+      inverseproxy_shared:
+{% if inventory_hostname in groups['docker_auth'] %}
+      auth_default:
+{% endif %}
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "80"
+      traefik.own.frontend.rule: "Host:{{ cloud_url }}"
+
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ cloud_db_root }}
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD={{ cloud_db_pass }}
+      - MYSQL_DATABASE=nextcloud
+    volumes:
+      - mysql:/var/lib/mysql:z
+
+{% if cloud_onlyoffice is defined %}
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    restart: unless-stopped
+    stdin_open: true
+    networks:
+      default:
+      inverseproxy_shared:
+    volumes:
+      - document_data:/var/www/onlyoffice/Data
+      - document_log:/var/log/onlyoffice
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "80"
+      traefik.own.frontend.rule: "Host:{{ cloud_onlyoffice_url }}"
+{% endif %}
+
+{% if cloud_collabora is defined %}
+  collabora:
+    image: remifilament/collaboracode:latest
+    restart: unless-stopped
+    environment:
+      - domain={{ cloud_url|replace(".","\\\.") }}
+      - username=admin
+      - password=adminSecurPass!1
+      - dictionaries=fr_FR
+      - logging=warning
+      - ssl=false
+      - proxy=true
+    cap_add:
+      - MKNOD
+    networks:
+      inverseproxy_shared:
+    labels:
+      traefik.docker.network: "inverseproxy_shared"
+      traefik.enable: "true"
+      traefik.frontend.passHostHeader: "true"
+      traefik.port: "9980"
+      traefik.own.frontend.rule: "Host:{{ cloud_collabora_url }}"
+{% endif %}
+
+networks:
+    default:
+        driver_opts:
+            encrypted: 1
+    inverseproxy_shared:
+        external: true
+{% if inventory_hostname in groups['docker_auth'] %}
+    auth_default:
+        external: true
+{% endif %}
+
+volumes:
+    nextcloud:
+    mysql:
+{% if cloud_onlyoffice is defined %}
+    document_data:
+    document_log:
+{% endif %}

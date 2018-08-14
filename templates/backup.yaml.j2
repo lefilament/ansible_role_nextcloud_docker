@@ -1,0 +1,45 @@
+version: "2.1"
+services:
+    backup_nextcloud:
+        build:
+            context: .
+            dockerfile: Dockerfile-nextbak
+        image: remifilament/duplicity:mysql
+        hostname: backup-nextcloud
+        domainname: "{{ cloud_url }}"
+        environment:
+            DST: "swift://nextcloud_{{ inventory_hostname|lower }}"
+            MYSQL_DATABASE: nextcloud
+            MYSQL_USER: nextcloud
+            MYSQL_PASSWORD: {{ cloud_db_pass }}
+            MYSQL_HOST: db
+            PASSPHRASE: "{{ cloud_db_pass }}"
+            SWIFT_USERNAME: "{{ swift_username }}"
+            SWIFT_PASSWORD: "{{ swift_password }}"
+            SWIFT_AUTHURL: "{{ swift_authurl }}"
+            SWIFT_AUTHVERSION: {{ swift_authversion }}
+            SWIFT_TENANTNAME: "{{ swift_tenantname }}"
+            SWIFT_TENANTID: "{{ swift_tenantid }}"
+            SWIFT_REGIONNAME: "{{ swift_regionname }}"
+            JOB_200_WHEN: "weekly"
+            JOB_300_WHAT: "backup --full-if-older-than 1D"
+            JOB_300_WHEN: "weekly"
+            JOB_302_WHAT: "dup remove-all-but-n-full 4 --force $$DST $$@"
+            JOB_302_WHEN: "weekly"
+            JOB_700_WHEN: "weekly"
+        volumes:
+            - nextcloud_nextcloud:/mnt/backup/src/nextcloud:z
+        networks:
+            - nextcloud_default
+        command:
+            - /etc/periodic/weekly/jobrunner
+
+networks:
+    nextcloud_default:
+        driver_opts:
+            encrypted: 1
+        external: true
+
+volumes:
+    nextcloud_nextcloud:
+        external: true
