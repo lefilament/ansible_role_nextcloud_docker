@@ -1,11 +1,13 @@
-version: '3'
+version: '2.1'
 
 services:
   nextcloud:
     image: nextcloud
+    container_name: nextcloud
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
@@ -18,9 +20,7 @@ services:
     networks:
       default:
       inverseproxy_shared:
-{% if inventory_hostname in groups['docker_auth'] %}
-      auth_default:
-{% endif %}
+      proxy:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
@@ -30,6 +30,7 @@ services:
 
   db:
     image: mariadb
+    container_name: nextcloud_db
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
     environment:
@@ -39,10 +40,16 @@ services:
       - MYSQL_DATABASE=nextcloud
     volumes:
       - mysql:/var/lib/mysql:z
+    healthcheck:
+      test: mysqladmin -uroot -p{{ cloud_db_root }} ping
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
 {% if cloud_onlyoffice is defined %}
   onlyoffice:
     image: onlyoffice/documentserver:latest
+    container_name: nextcloud_onlyoffice
     restart: unless-stopped
     stdin_open: true
     networks:
@@ -57,11 +64,12 @@ services:
       traefik.frontend.passHostHeader: "true"
       traefik.port: "80"
       traefik.own.frontend.rule: "Host:{{ cloud_onlyoffice_url }}"
-{% endif %}
 
+{% endif %}
 {% if cloud_collabora is defined %}
   collabora:
     image: remifilament/collaboracode:latest
+    container_name: nextcloud_collabora
     restart: unless-stopped
     environment:
       - domain={{ cloud_url|replace(".","\\\.") }}
@@ -81,18 +89,35 @@ services:
       traefik.frontend.passHostHeader: "true"
       traefik.port: "9980"
       traefik.own.frontend.rule: "Host:{{ cloud_collabora_url }}"
+
 {% endif %}
+  apps:
+    image: tecnativa/whitelist
+    container_name: nextcloud_apps
+    networks:
+      proxy:
+        aliases:
+          - "apps.nextcloud.com"
+      public:
+    environment:
+      TARGET: "apps.nextcloud.com"
+      PRE_RESOLVE: 1
+    restart: unless-stopped
 
 networks:
     default:
+        internal: true
+        driver_opts:
+            encrypted: 1
+    proxy:
+        internal: true
+        driver_opts:
+            encrypted: 1
+    public:
         driver_opts:
             encrypted: 1
     inverseproxy_shared:
         external: true
-{% if inventory_hostname in groups['docker_auth'] %}
-    auth_default:
-        external: true
-{% endif %}
 
 volumes:
     nextcloud:
