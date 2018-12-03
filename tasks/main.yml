@@ -8,36 +8,10 @@
     owner: root
     group: root
     mode: 0400
+  notify: 
+    - start nextcloud docker
+    - set trusted domain
 
-- name: start nextcloud docker
-  docker_service:
-    project_src: /home/docker/
-    files: nextcloud.yaml
-    project_name: nextcloud
-  async: 120
-  poll: 10
-  tags: start_docker
-
-## Configure OnlyOffice application
-- name: Set trusted domain to nextcloud for collaborative documents
-  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set trusted_domains 2 --value="nextcloud"
-  when: cloud_onlyoffice is defined
-
-- name: Install OnlyOffice app
-  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings app:enable onlyoffice
-  when: cloud_onlyoffice is defined
-
-- name: Set OnlyOffice URL
-  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice DocumentServerUrl --value="https://{{ cloud_docs_url}}"
-  when: cloud_onlyoffice is defined
-
-- name: Set internal OnlyOffice URL
-  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice DocumentServerInternalUrl --value="http://onlyoffice/"
-  when: cloud_onlyoffice is defined
-
-- name: Set internal NextCloud URL
-  shell: docker exec -u www-data nextcloud_nextcloud_1 php occ --no-warnings config:system:set onlyoffice StorageUrl --value="http://nextcloud/"
-  when: cloud_onlyoffice is defined
 
 
 ## Install Nextcloud backup docker
