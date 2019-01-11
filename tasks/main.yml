@@ -12,8 +12,6 @@
     - start nextcloud docker
     - set trusted domain
 
-
-
 ## Install Nextcloud backup docker
 - name: Install nextcloud backup compose file
   template:
