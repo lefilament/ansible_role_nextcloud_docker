@@ -31,6 +31,7 @@ services:
             - nextcloud_nextcloud:/mnt/backup/src/nextcloud:z
         networks:
             - nextcloud_default
+            - public
         command:
             - /etc/periodic/weekly/jobrunner
 
@@ -39,6 +40,9 @@ networks:
         driver_opts:
             encrypted: 1
         external: true
+    public:
+        driver_opts:
+            encrypted: 1
 
 volumes:
     nextcloud_nextcloud:
