@@ -62,7 +62,7 @@ services:
 {% endif %}
 {% if cloud_collabora is defined %}
   collabora:
-    image: remifilament/collaboracode:latest
+    image: collabora/code
     container_name: nextcloud_collabora
     restart: unless-stopped
     environment:
@@ -70,9 +70,9 @@ services:
       - username={{ cloud_collabora_admin_user }}
       - password={{ cloud_collabora_admin_pass }}
       - dictionaries=fr_FR
-      - logging=warning
-      - ssl=false
-      - proxy=true
+      - extra_params=-o:logging.level=warning
+      - extra_params=-o:ssl.enable=false
+      - extra_params=-o:ssl.termination=true
     cap_add:
       - MKNOD
     networks:
