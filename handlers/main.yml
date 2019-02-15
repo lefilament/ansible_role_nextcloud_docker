@@ -11,3 +11,6 @@
 
 - name: set trusted domain
   shell: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 1 --value="{{ cloud_url }}"
+
+- name: overwrite protocol
+  shell: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" overwriteprotocol --value="https"

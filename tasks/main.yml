@@ -11,6 +11,7 @@
   notify: 
     - start nextcloud docker
     - set trusted domain
+    - overwrite protocol
 
 ## Install Nextcloud backup docker
 - name: Install nextcloud backup compose file
