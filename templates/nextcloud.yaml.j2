@@ -25,6 +25,7 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
+      traefik.frontend.headers.customResponseHeaders=Strict-Transport-Security: "15552000"
       traefik.frontend.passHostHeader: "true"
       traefik.port: "80"
       traefik.own.frontend.rule: "Host:{{ cloud_url }}"
@@ -88,7 +89,6 @@ services:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
       traefik.frontend.passHostHeader: "true"
-      traefik.frontend.headers.customResponseHeaders=Strict-Transport-Security: "15552000"
       traefik.port: "9980"
       traefik.own.frontend.rule: "Host:{{ cloud_collabora_url }}"
 
