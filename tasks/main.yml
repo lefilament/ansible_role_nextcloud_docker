@@ -13,6 +13,12 @@
     - set trusted domain
     - overwrite protocol
 
+- name: add cron job for nextcloud cron.php
+  cron:
+    name: nextcloud cron.php
+    minute: "*/15"
+    job: /usr/bin/docker exec --user www-data nextcloud php cron.php 
+
 ## Install Nextcloud backup docker
 - name: Install nextcloud backup compose file
   template:
