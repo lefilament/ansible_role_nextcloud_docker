@@ -43,3 +43,4 @@
     hour: 2
     weekday: 7
     job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-nextcloud.yaml run --rm backup_nextcloud 
+  when: inventory_hostname in groups['maintenance_contract']
