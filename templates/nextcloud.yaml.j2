@@ -25,7 +25,9 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.frontend.headers.customResponseHeaders=Strict-Transport-Security: "15552000"
+      traefik.frontend.headers.STSSeconds: "15552000"
+      traefik.frontend.headers.STSIncludeSubdomains: "true"
+      traefik.frontend.headers.STSPreload: "true"
       traefik.frontend.passHostHeader: "true"
       traefik.port: "80"
       traefik.own.frontend.rule: "Host:{{ cloud_url }}"
@@ -65,6 +67,9 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
+      traefik.frontend.headers.STSSeconds: "15552000"
+      traefik.frontend.headers.STSIncludeSubdomains: "true"
+      traefik.frontend.headers.STSPreload: "true"
       traefik.frontend.passHostHeader: "true"
       traefik.port: "80"
       traefik.own.frontend.rule: "Host:{{ cloud_onlyoffice_url }}"
@@ -88,6 +93,9 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
+      traefik.frontend.headers.STSSeconds: "15552000"
+      traefik.frontend.headers.STSIncludeSubdomains: "true"
+      traefik.frontend.headers.STSPreload: "true"
       traefik.frontend.passHostHeader: "true"
       traefik.port: "9980"
       traefik.own.frontend.rule: "Host:{{ cloud_collabora_url }}"
