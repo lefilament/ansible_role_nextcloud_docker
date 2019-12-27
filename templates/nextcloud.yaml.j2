@@ -114,6 +114,19 @@ services:
       PRE_RESOLVE: 1
     restart: unless-stopped
 
+  apps:
+    image: tecnativa/whitelist
+    container_name: nextcloud_notifs
+    networks:
+      proxy:
+        aliases:
+          - "push-notifications.nextcloud.com"
+      public:
+    environment:
+      TARGET: "push-notifications.nextcloud.com"
+      PRE_RESOLVE: 1
+    restart: unless-stopped
+
 networks:
     default:
         internal: true
