@@ -9,7 +9,7 @@ On top of deploying and starting the Nextcloud instance, the following functiona
 - integration with OnlyOffice and/or Collabora CODE for NextCloud
 - integration with LDAP network if necessary
 
-Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/remi-filament/ansible_role_docker_server))
+Prior to running this role, you would need to have docker installed on your server and a traefik proxy (which is the purpose of [this role](https://github.com/lefilament/ansible_role_docker_server))
 
 In order to use this role, you would need to define the following variables for your server (in hostvars for instance) - Only the names of the variables are provided below (not the values) for these used by this role to properly configure everything, you may copy this file directly in hostvars and set the variable although we could only encourage you to use an Ansible vault and refer vault variables from there:
 
@@ -40,13 +40,13 @@ cloud_admin:
 cloud_admin_pass: 
 
 ## Swift Configuration
-swift_username:
-swift_password:
-swift_authurl:
-swift_authversion:
-swift_tenantname:
-swift_tenantid:
-swift_regionname:
+swift_cloud_username:
+swift_cloud_password:
+swift_cloud_authurl:
+swift_cloud_authversion:
+swift_cloud_tenantname:
+swift_cloud_tenantid:
+swift_cloud_regionname:
 
 ## OnlyOffice Configuration
 # Document collaboration present for OnlyOffice ? (variable to be removed if not used)
@@ -73,7 +73,7 @@ In order to get the Collabora CODE properly working when deployed on the same se
 # Procedure to restore Nextcloud from backup
 
 In order to restore Nextcloud database and files from backup, change directory to /home/docker/backups and run the following command:
-```docker-compose -f backup-nextcloud.yaml run --rm backup_nextcloud sh -c "restore --force && mysql -h \$MYSQL_HOST -u \$MYSQL_USER -p\$MYSQL_PASSWORD \$MYSQL_DATABASE < \$SRC/mysql_db_\$MYSQL_DATABASE.sql"```
+`docker-compose -f backup-nextcloud.yaml run --rm backup_nextcloud sh -c "restore --force && mysql -h \$MYSQL_HOST -u \$MYSQL_USER -p\$MYSQL_PASSWORD \$MYSQL_DATABASE < \$SRC/mysql_db_\$MYSQL_DATABASE.sql"`
 
 
 
