@@ -14,13 +14,13 @@ services:
             MYSQL_PASSWORD: {{ cloud_db_pass }}
             MYSQL_HOST: db
             PASSPHRASE: "{{ cloud_db_pass }}"
-            SWIFT_USERNAME: "{{ swift_username }}"
-            SWIFT_PASSWORD: "{{ swift_password }}"
-            SWIFT_AUTHURL: "{{ swift_authurl }}"
-            SWIFT_AUTHVERSION: {{ swift_authversion }}
-            SWIFT_TENANTNAME: "{{ swift_tenantname }}"
-            SWIFT_TENANTID: "{{ swift_tenantid }}"
-            SWIFT_REGIONNAME: "{{ swift_regionname }}"
+            SWIFT_USERNAME: "{{ swift_cloud_username }}"
+            SWIFT_PASSWORD: "{{ swift_cloud_password }}"
+            SWIFT_AUTHURL: "{{ swift_cloud_authurl }}"
+            SWIFT_AUTHVERSION: {{ swift_cloud_authversion }}
+            SWIFT_TENANTNAME: "{{ swift_cloud_tenantname }}"
+            SWIFT_TENANTID: "{{ swift_cloud_tenantid }}"
+            SWIFT_REGIONNAME: "{{ swift_cloud_regionname }}"
             JOB_200_WHEN: "weekly"
             JOB_300_WHAT: "backup --full-if-older-than 1D"
             JOB_300_WHEN: "weekly"
