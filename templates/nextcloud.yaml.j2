@@ -25,12 +25,18 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.frontend.headers.STSSeconds: "15552000"
-      traefik.frontend.headers.STSIncludeSubdomains: "true"
-      traefik.frontend.headers.STSPreload: "true"
-      traefik.frontend.passHostHeader: "true"
-      traefik.port: "80"
-      traefik.own.frontend.rule: "Host:{{ cloud_url }}"
+      traefik.http.routers.cloud-unsec.entrypoints: "http"
+      traefik.http.routers.cloud-unsec.middlewares: "https-redirect@file"
+      traefik.http.routers.cloud-unsec.rule: "Host(`{{ cloud_url }}`)"
+      traefik.http.routers.cloud-unsec.service: "cloud"
+      traefik.http.routers.cloud.entrypoints: "https"
+      traefik.http.routers.cloud.middlewares: "security-headers@file"
+      traefik.http.routers.cloud.rule: "Host(`{{ cloud_url }}`)"
+      traefik.http.routers.cloud.service: "cloud"
+      traefik.http.routers.cloud.tls: "true"
+      traefik.http.routers.cloud.tls.certresolver: "le"
+      traefik.http.routers.cloud.tls.options: "default@file"
+      traefik.http.services.cloud.loadbalancer.server.port: "80"
 
   db:
     image: mariadb
@@ -67,12 +73,18 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.frontend.headers.STSSeconds: "15552000"
-      traefik.frontend.headers.STSIncludeSubdomains: "true"
-      traefik.frontend.headers.STSPreload: "true"
-      traefik.frontend.passHostHeader: "true"
-      traefik.port: "80"
-      traefik.own.frontend.rule: "Host:{{ cloud_onlyoffice_url }}"
+      traefik.http.routers.cloud-onlyoffice-unsec.entrypoints: "http"
+      traefik.http.routers.cloud-onlyoffice-unsec.middlewares: "https-redirect@file"
+      traefik.http.routers.cloud-onlyoffice-unsec.rule: "Host(`{{ cloud_onlyoffice_url }}`)"
+      traefik.http.routers.cloud-onlyoffice-unsec.service: "cloud-onlyoffice"
+      traefik.http.routers.cloud-onlyoffice.entrypoints: "https"
+      traefik.http.routers.cloud-onlyoffice.middlewares: "security-headers@file"
+      traefik.http.routers.cloud-onlyoffice.rule: "Host(`{{ cloud_onlyoffice_url }}`)"
+      traefik.http.routers.cloud-onlyoffice.service: "cloud-onlyoffice"
+      traefik.http.routers.cloud-onlyoffice.tls: "true"
+      traefik.http.routers.cloud-onlyoffice.tls.certresolver: "le"
+      traefik.http.routers.cloud-onlyoffice.tls.options: "default@file"
+      traefik.http.services.cloud-onlyoffice.loadbalancer.server.port: "80"
 
 {% endif %}
 {% if cloud_collabora is defined %}
@@ -93,12 +105,18 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
-      traefik.frontend.headers.STSSeconds: "15552000"
-      traefik.frontend.headers.STSIncludeSubdomains: "true"
-      traefik.frontend.headers.STSPreload: "true"
-      traefik.frontend.passHostHeader: "true"
-      traefik.port: "9980"
-      traefik.own.frontend.rule: "Host:{{ cloud_collabora_url }}"
+      traefik.http.routers.cloud-collabora-unsec.entrypoints: "http"
+      traefik.http.routers.cloud-collabora-unsec.middlewares: "https-redirect@file"
+      traefik.http.routers.cloud-collabora-unsec.rule: "Host(`{{ cloud_collabora_url }}`)"
+      traefik.http.routers.cloud-collabora-unsec.service: "cloud-collabora"
+      traefik.http.routers.cloud-collabora.entrypoints: "https"
+      traefik.http.routers.cloud-collabora.middlewares: "security-headers@file"
+      traefik.http.routers.cloud-collabora.rule: "Host(`{{ cloud_collabora_url }}`)"
+      traefik.http.routers.cloud-collabora.service: "cloud-collabora"
+      traefik.http.routers.cloud-collabora.tls: "true"
+      traefik.http.routers.cloud-collabora.tls.certresolver: "le"
+      traefik.http.routers.cloud-collabora.tls.options: "default@file"
+      traefik.http.services.cloud-collabora.loadbalancer.server.port: "9980"
 
 {% endif %}
   apps:
