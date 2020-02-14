@@ -27,6 +27,7 @@
     owner: root
     group: root
     mode: 0400
+  when: inventory_hostname in groups['maintenance_contract']
 
 - name: Copy docker file for mysql duplicity
   copy:
@@ -35,6 +36,7 @@
     owner: root
     group: root
     mode: 0644
+  when: inventory_hostname in groups['maintenance_contract']
 
 - name: add cron job to run backup every week
   cron:
