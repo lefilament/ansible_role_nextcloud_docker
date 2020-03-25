@@ -8,6 +8,8 @@ services:
     depends_on:
       - db
       - redis
+      - apps
+      - notifs
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
@@ -25,12 +27,15 @@ services:
     labels:
       traefik.docker.network: "inverseproxy_shared"
       traefik.enable: "true"
+      # Middleware cloud-dav replaces .well-known paths for caldav and carddav with proper nextcloud path
+      traefik.http.middlewares.cloud-dav.replacepathregex.regex: "^/.well-known/ca(l|rd)dav"
+      traefik.http.middlewares.cloud-dav.replacepathregex.replacement: "/remote.php/dav/"
       traefik.http.routers.cloud-unsec.entrypoints: "http"
       traefik.http.routers.cloud-unsec.middlewares: "https-redirect@file"
       traefik.http.routers.cloud-unsec.rule: "Host(`{{ cloud_url }}`)"
       traefik.http.routers.cloud-unsec.service: "cloud"
       traefik.http.routers.cloud.entrypoints: "https"
-      traefik.http.routers.cloud.middlewares: "security-headers@file"
+      traefik.http.routers.cloud.middlewares: "security-headers@file, cloud-dav@docker"
       traefik.http.routers.cloud.rule: "Host(`{{ cloud_url }}`)"
       traefik.http.routers.cloud.service: "cloud"
       traefik.http.routers.cloud.tls: "true"
@@ -133,7 +138,7 @@ services:
       PRE_RESOLVE: 1
     restart: unless-stopped
 
-  apps:
+  notifs:
     image: tecnativa/whitelist
     container_name: nextcloud_notifs
     networks:
