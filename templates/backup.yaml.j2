@@ -3,7 +3,7 @@ services:
     backup_nextcloud:
         build:
             context: .
-            dockerfile: Dockerfile-nextbak
+            dockerfile: Dockerfile-mysql
         image: filament/duplicity:mysql
         hostname: backup-nextcloud
         domainname: "{{ cloud_url }}"

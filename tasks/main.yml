@@ -32,7 +32,7 @@
 - name: Copy docker file for mysql duplicity
   copy:
     src: Dockerfile-backup
-    dest: /home/docker/backups/Dockerfile-nextbak
+    dest: /home/docker/backups/Dockerfile-mysql
     owner: root
     group: root
     mode: 0644
