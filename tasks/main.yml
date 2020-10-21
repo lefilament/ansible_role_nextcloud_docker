@@ -7,7 +7,7 @@
     dest: /home/docker/nextcloud.yaml
     owner: root
     group: root
-    mode: 0400
+    mode: '0400'
   notify: 
     - start nextcloud docker
     - set trusted domain
@@ -26,7 +26,7 @@
     dest: /home/docker/backups/backup-nextcloud.yaml
     owner: root
     group: root
-    mode: 0400
+    mode: '0400'
   when: inventory_hostname in groups['maintenance_contract']
 
 - name: Copy docker file for mysql duplicity
@@ -35,14 +35,14 @@
     dest: /home/docker/backups/Dockerfile-mysql
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   when: inventory_hostname in groups['maintenance_contract']
 
 - name: add cron job to run backup every week
   cron:
     name: backup nextcloud
-    minute: 43
-    hour: 2
-    weekday: 7
+    minute: "43"
+    hour: "2"
+    weekday: "7"
     job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-nextcloud.yaml run --rm backup_nextcloud 
   when: inventory_hostname in groups['maintenance_contract']

@@ -1,7 +1,7 @@
 ---
 
 - name: start nextcloud docker
-  docker_service:
+  docker_compose:
     project_src: /home/docker/
     files: nextcloud.yaml
     project_name: nextcloud

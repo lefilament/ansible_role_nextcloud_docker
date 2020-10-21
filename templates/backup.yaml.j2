@@ -6,7 +6,6 @@ services:
             dockerfile: Dockerfile-mysql
         image: filament/duplicity:mysql
         hostname: backup-nextcloud
-        domainname: "{{ cloud_url }}"
         environment:
             DST: "swift://nextcloud_{{ inventory_hostname|lower }}"
             MYSQL_DATABASE: nextcloud
@@ -22,7 +21,7 @@ services:
             SWIFT_TENANTID: "{{ swift_cloud_tenantid }}"
             SWIFT_REGIONNAME: "{{ swift_cloud_regionname }}"
             JOB_200_WHEN: "weekly"
-            JOB_300_WHAT: "backup --full-if-older-than 1D"
+            JOB_300_WHAT: "dup full $$SRC $$DST"
             JOB_300_WHEN: "weekly"
             JOB_302_WHAT: "dup remove-all-but-n-full 4 --force $$DST $$@"
             JOB_302_WHEN: "weekly"
@@ -37,8 +36,6 @@ services:
 
 networks:
     nextcloud_default:
-        driver_opts:
-            encrypted: 1
         external: true
     public:
         driver_opts:
