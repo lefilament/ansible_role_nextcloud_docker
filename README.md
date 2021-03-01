@@ -16,13 +16,13 @@ In order to use this role, you would need to define the following variables for 
 ```json
 ## Ansible configuration for connecting to remote host
 # IP address of server
-ansible_ssh_host: 
+ansible_host: 
 # User to be used on server (to which Ansible server public key has been provided)
-ansible_ssh_user: 
+ansible_user: 
 # Encryped password (for elevating rights / sudo)
-ansible_ssh_sudo_pass: 
+ansible_become_pass: 
 # Server SSHD port
-ansible_ssh_port: 
+ansible_port: 
 
 
 ## Nextcloud configuration

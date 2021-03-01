@@ -23,7 +23,7 @@ services:
             JOB_200_WHEN: "weekly"
             JOB_300_WHAT: "dup full $$SRC $$DST"
             JOB_300_WHEN: "weekly"
-            JOB_302_WHAT: "dup remove-all-but-n-full 4 --force $$DST $$@"
+            JOB_302_WHAT: "dup remove-all-but-n-full 5 --force $$DST $$@"
             JOB_302_WHEN: "weekly"
             JOB_700_WHEN: "weekly"
         volumes:
