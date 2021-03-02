@@ -26,7 +26,7 @@ ansible_port:
 
 
 ## Nextcloud configuration
-# Nextcloud URL
+# Nextcloud URL (only sub.domain without https:// in front)
 cloud_url: 
 # Nextcloud DB user/role
 cloud_db_user: 
@@ -51,13 +51,13 @@ swift_cloud_regionname:
 ## OnlyOffice Configuration
 # Document collaboration present for OnlyOffice ? (variable to be removed if not used)
 cloud_onlyoffice: yes
-# Document collaboration OnlyOffice URL
+# Document collaboration OnlyOffice URL (only sub.domain without https:// in front)
 cloud_onlyoffice_url: 
 
 ## Collabora Configuration
 # Document collaboration present for Collabora ? (variable to be removed if not used)
 cloud_collabora: yes
-# Document collaboration OnlyOffice URL
+# Document collaboration Collabora URL (only sub.domain without https:// in front)
 cloud_collabora_url: 
 cloud_collabora_admin_user:
 cloud_collabora_admin_pass:
