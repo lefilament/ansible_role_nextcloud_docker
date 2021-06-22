@@ -2,7 +2,7 @@ docker_nextcloud
 ===============
 
 This role deploys NextCloud in a Docker with Collabora Online and/or OnlyOffice
-The main repo for this role is on [Le Filament GitLab](https://sources.le-filament.com/lefilament/ansible-roles/docker_drawio.git)
+The main repo for this role is on [Le Filament GitLab](https://sources.le-filament.com/lefilament/ansible-roles/docker_nextcloud.git)
 
 Requirements
 ------------
