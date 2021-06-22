@@ -1,0 +1,34 @@
+---
+## MariaDB and NextCloud versions
+nextcloud_db_version: '10.5'
+nextcloud_version: '21'
+
+## NextCloud URL
+cloud_url: "cloud.example.org"
+## NextCloud DB
+cloud_db_root: "veryUnsecureRootPassToBeModified"
+cloud_db_user: "nextcloud"
+cloud_db_pass: "veryUnsecurePassToBeModified"
+## NextCloud Admin User / Password
+cloud_admin_user: "admin"
+cloud_admin_pass: "veryUnsecureAdminPassToBeModified"
+
+## OPTIONAL - Collabora and/or OnlyOffice deployment options
+cloud_collabora: false
+# cloud_collabora_url: "collabora.example.org"
+# cloud_collabora_admin_user: "admin"
+# cloud_collabora_admin_pass: "veryUnsecureAdminPassToBeModified"
+cloud_onlyoffice: false
+# cloud_onlyoffice_url: "onlyoffice.example.org"
+
+## OPTIONAL - For Backups only
+## Parameters for pushing backups to Object Storage
+# swift_cloud_authurl: https://auth.cloud.ovh.net/v3/
+# swift_cloud_authversion: 3
+# swift_cloud_tenantid: "132e1fa"
+# swift_cloud_tenantname: "12312534534"
+# swift_cloud_username: "testuser"
+# swift_cloud_password: "testpassword"
+# swift_cloud_regionname: "GRA"
+## Passphrase for backups encryption
+# cloud_backup_pass: notSecureEnoughPasswordToBeModified

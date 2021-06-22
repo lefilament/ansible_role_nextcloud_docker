@@ -12,7 +12,7 @@ services:
             MYSQL_USER: nextcloud
             MYSQL_PASSWORD: {{ cloud_db_pass }}
             MYSQL_HOST: db
-            PASSPHRASE: "{{ cloud_db_pass }}"
+            PASSPHRASE: "{{ cloud_backup_pass | default(cloud_db_pass) }}"
             SWIFT_USERNAME: "{{ swift_cloud_username }}"
             SWIFT_PASSWORD: "{{ swift_cloud_password }}"
             SWIFT_AUTHURL: "{{ swift_cloud_authurl }}"

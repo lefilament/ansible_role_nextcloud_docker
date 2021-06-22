@@ -2,20 +2,22 @@ version: '2.1'
 
 services:
   nextcloud:
-    image: nextcloud:20
+    image: nextcloud:{{ nextcloud_version }}
     container_name: nextcloud
     restart: unless-stopped
     depends_on:
       - db
       - redis
+{% if restrict_internet_access %}
       - apps
       - notifs
+{% endif %}
     environment:
       - MYSQL_DATABASE=nextcloud
       - MYSQL_USER=nextcloud
       - MYSQL_PASSWORD={{ cloud_db_pass }}
       - MYSQL_HOST=db
-      - NEXTCLOUD_ADMIN_USER={{ cloud_admin }}
+      - NEXTCLOUD_ADMIN_USER={{ cloud_admin_user }}
       - NEXTCLOUD_ADMIN_PASSWORD={{ cloud_admin_pass }}
       - REDIS_HOST=redis
     volumes:
@@ -23,7 +25,9 @@ services:
     networks:
       default:
       inverseproxy_shared:
+{% if restrict_internet_access %}
       proxy:
+{% endif %}
     labels:
       traefik.enable: "true"
       # Middleware cloud-dav replaces .well-known paths for caldav and carddav with proper nextcloud path
@@ -35,7 +39,7 @@ services:
       traefik.http.services.cloud.loadbalancer.server.port: "80"
 
   db:
-    image: mariadb:10.4
+    image: mariadb:{{ nextcloud_db_version }}
     container_name: nextcloud_db
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: unless-stopped
@@ -54,7 +58,7 @@ services:
     volumes:
       - redis:/var/lib/redis:z
 
-{% if cloud_onlyoffice is defined %}
+{% if cloud_onlyoffice %}
   onlyoffice:
     image: onlyoffice/documentserver:latest
     container_name: nextcloud_onlyoffice
@@ -75,7 +79,7 @@ services:
       traefik.http.services.cloud-onlyoffice.loadbalancer.server.port: "80"
 
 {% endif %}
-{% if cloud_collabora is defined %}
+{% if cloud_collabora %}
   collabora:
     image: collabora/code
     container_name: nextcloud_collabora
@@ -97,6 +101,7 @@ services:
       traefik.http.services.cloud-collabora.loadbalancer.server.port: "9980"
 
 {% endif %}
+{% if restrict_internet_access %}
   apps:
     image: tecnativa/whitelist
     container_name: nextcloud_apps
@@ -123,11 +128,13 @@ services:
       PRE_RESOLVE: 1
     restart: unless-stopped
 
+{% endif %}
 networks:
     default:
         internal: true
         driver_opts:
             encrypted: 1
+{% if restrict_internet_access %}
     proxy:
         internal: true
         driver_opts:
@@ -135,6 +142,7 @@ networks:
     public:
         driver_opts:
             encrypted: 1
+{% endif %}
     inverseproxy_shared:
         external: true
 
@@ -142,7 +150,7 @@ volumes:
     nextcloud:
     mysql:
     redis:
-{% if cloud_onlyoffice is defined %}
+{% if cloud_onlyoffice %}
     document_data:
     document_log:
 {% endif %}

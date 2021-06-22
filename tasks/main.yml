@@ -8,7 +8,7 @@
     owner: root
     group: root
     mode: '0400'
-  notify: 
+  notify:
     - start nextcloud docker
     - set trusted domain
     - overwrite protocol
@@ -17,7 +17,7 @@
   cron:
     name: nextcloud cron.php
     minute: "*/15"
-    job: /usr/bin/docker exec --user www-data nextcloud php cron.php 
+    job: /usr/bin/docker exec --user www-data nextcloud php cron.php
 
 ## Install Nextcloud backup docker
 - name: Install nextcloud backup compose file
@@ -44,5 +44,58 @@
     minute: "43"
     hour: "2"
     weekday: "7"
-    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-nextcloud.yaml run --rm backup_nextcloud 
+    job: /usr/local/bin/docker-compose -f /home/docker/backups/backup-nextcloud.yaml run --rm backup_nextcloud
   when: inventory_hostname in groups['maintenance_contract']
+
+# Flush handlers in order to start nextcloud if necessary
+- name: Flush handlers
+  meta: flush_handlers
+
+# Set correct variables in configuration files
+# TODO : replace by writing on nextcloud volume configuration file and restart nextcloud
+- name: set trusted domain
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 1 --value="{{ cloud_url }}"
+
+- name: overwrite protocol
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" overwriteprotocol --value="https"
+
+# Collaborative edition tools configuration
+- name: Set trusted domain to nextcloud for collaborative documents
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 2 --value="nextcloud"
+  when: cloud_onlyoffice is defined
+  tags: docker_cloudaborative
+
+- name: Install OnlyOffice app
+  command: docker exec -u www-data nextcloud php occ --no-warnings "app:enable" onlyoffice
+  when: cloud_onlyoffice is defined
+  tags: docker_cloudaborative
+
+- name: Set OnlyOffice URL
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice DocumentServerUrl --value="https://{{ cloud_onlyoffice_url }}"
+  when: cloud_onlyoffice is defined
+  tags: docker_cloudaborative
+
+- name: Set internal OnlyOffice URL
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice DocumentServerInternalUrl --value="http://onlyoffice/"
+  when: cloud_onlyoffice is defined
+  tags: docker_cloudaborative
+
+- name: Set internal NextCloud URL
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice StorageUrl --value="http://nextcloud/"
+  when: cloud_onlyoffice is defined
+  tags: docker_cloudaborative
+
+- name: Set trusted domain to collabora for collaborative documents
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 3 --value="{{ cloud_collabora_url }}"
+  when: cloud_collabora is defined
+  tags: docker_cloudaborative
+
+- name: Install Collabora app
+  command: docker exec -u www-data nextcloud php occ --no-warnings "app:enable" richdocuments
+  when: cloud_collabora is defined
+  tags: docker_cloudaborative
+
+- name: Set Collabora URL
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" richdocuments wopi_url --value="https://{{ cloud_collabora_url }}"
+  when: cloud_collabora is defined
+  tags: docker_cloudaborative
