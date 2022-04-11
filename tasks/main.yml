@@ -10,8 +10,6 @@
     mode: '0400'
   notify:
     - start nextcloud docker
-    - set trusted domain
-    - overwrite protocol
 
 - name: add cron job for nextcloud cron.php
   cron:
@@ -62,40 +60,40 @@
 # Collaborative edition tools configuration
 - name: Set trusted domain to nextcloud for collaborative documents
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 2 --value="nextcloud"
-  when: cloud_onlyoffice is defined
+  when: cloud_onlyoffice
   tags: docker_cloudaborative
 
 - name: Install OnlyOffice app
   command: docker exec -u www-data nextcloud php occ --no-warnings "app:enable" onlyoffice
-  when: cloud_onlyoffice is defined
+  when: cloud_onlyoffice
   tags: docker_cloudaborative
 
 - name: Set OnlyOffice URL
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice DocumentServerUrl --value="https://{{ cloud_onlyoffice_url }}"
-  when: cloud_onlyoffice is defined
+  when: cloud_onlyoffice
   tags: docker_cloudaborative
 
 - name: Set internal OnlyOffice URL
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice DocumentServerInternalUrl --value="http://onlyoffice/"
-  when: cloud_onlyoffice is defined
+  when: cloud_onlyoffice
   tags: docker_cloudaborative
 
 - name: Set internal NextCloud URL
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" onlyoffice StorageUrl --value="http://nextcloud/"
-  when: cloud_onlyoffice is defined
+  when: cloud_onlyoffice
   tags: docker_cloudaborative
 
 - name: Set trusted domain to collabora for collaborative documents
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 3 --value="{{ cloud_collabora_url }}"
-  when: cloud_collabora is defined
+  when: cloud_collabora
   tags: docker_cloudaborative
 
 - name: Install Collabora app
   command: docker exec -u www-data nextcloud php occ --no-warnings "app:enable" richdocuments
-  when: cloud_collabora is defined
+  when: cloud_collabora
   tags: docker_cloudaborative
 
 - name: Set Collabora URL
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" richdocuments wopi_url --value="https://{{ cloud_collabora_url }}"
-  when: cloud_collabora is defined
+  when: cloud_collabora
   tags: docker_cloudaborative

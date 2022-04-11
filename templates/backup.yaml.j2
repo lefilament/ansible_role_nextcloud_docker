@@ -5,7 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile-mysql
         image: filament/duplicity:mysql
-        hostname: backup-nextcloud
+        hostname: {{ inventory_hostname_short | lower | regex_replace('_','') }}-nextcloud
         environment:
             DST: "swift://nextcloud_{{ inventory_hostname|lower }}"
             MYSQL_DATABASE: nextcloud
@@ -26,6 +26,7 @@ services:
             JOB_302_WHAT: "dup remove-all-but-n-full 5 --force $$DST $$@"
             JOB_302_WHEN: "weekly"
             JOB_700_WHEN: "weekly"
+            OPTIONS: "--allow-source-mismatch"
         volumes:
             - nextcloud_nextcloud:/mnt/backup/src/nextcloud:z
         networks:
