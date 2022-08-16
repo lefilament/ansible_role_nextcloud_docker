@@ -1,15 +1,31 @@
 ---
 
+- name: Create nextcloud Docker structure on server in /home/docker/nextcloud
+  file:
+    name: "/home/docker/nextcloud"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
 ## Install Nextcloud docker
 - name: Install nextcloud docker
   template:
     src: nextcloud.yaml.j2
-    dest: /home/docker/nextcloud.yaml
+    dest: /home/docker/nextcloud/docker-compose.yaml
     owner: root
     group: root
     mode: '0400'
   notify:
     - start nextcloud docker
+
+- name: Add extra PHP configuration
+  template:
+    src: nextcloud-extra.ini.j2
+    dest: /home/docker/nextcloud/nextcloud-extra.ini
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: add cron job for nextcloud cron.php
   cron:
@@ -51,18 +67,16 @@
 
 # Set correct variables in configuration files
 # TODO : replace by writing on nextcloud volume configuration file and restart nextcloud
-- name: set trusted domain
+- name: set trusted domain 1
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 1 --value="{{ cloud_url }}"
+
+- name: set trusted domain 2
+  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 2 --value="nextcloud"
 
 - name: overwrite protocol
   command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" overwriteprotocol --value="https"
 
 # Collaborative edition tools configuration
-- name: Set trusted domain to nextcloud for collaborative documents
-  command: docker exec -u www-data nextcloud php occ --no-warnings "config:system:set" trusted_domains 2 --value="nextcloud"
-  when: cloud_onlyoffice
-  tags: docker_cloudaborative
-
 - name: Install OnlyOffice app
   command: docker exec -u www-data nextcloud php occ --no-warnings "app:enable" onlyoffice
   when: cloud_onlyoffice

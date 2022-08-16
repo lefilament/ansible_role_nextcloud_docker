@@ -1,0 +1,6 @@
+expose_php = Off
+{% if php_extra_conf is defined %}
+{% for var in php_extra_conf %}
+{{ var }}
+{% endfor %}
+{% endif %}

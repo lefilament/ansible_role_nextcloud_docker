@@ -13,13 +13,15 @@ Role Variables
 --------------
 
 Variables from default directory :
-* nextcloud_db_version: MariaDB version to be deployed (defaults to 10.5)
-* nextcloud_version: NextCloud version to be deployed (defaults to 21)
+* nextcloud_db_version: MariaDB version to be deployed (defaults to 10.8)
+* nextcloud_version: NextCloud version to be deployed (defaults to 23)
 * cloud_url: URL on which NextCloud will be listening
 * cloud_db_root: Database root password
 * cloud_db_pass: Database password
-* cloud_admin_user: Owncloud Admin user
-* cloud_admin_pass: Owncloud Admin password
+* cloud_admin_user: NextCloud Admin user
+* cloud_admin_pass: NextCloud Admin password
+* extra_cloud_urls: Allows NextCloud to connect to listed URLS (OPTIONAL whitelists)
+* extra_cloud_vars: Allows to define extra environment variables for NextCloud Docker (OPTIONAL)
 
 * Collaborative edition
   * Collabora :

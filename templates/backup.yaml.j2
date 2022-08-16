@@ -20,13 +20,10 @@ services:
             SWIFT_TENANTNAME: "{{ swift_cloud_tenantname }}"
             SWIFT_TENANTID: "{{ swift_cloud_tenantid }}"
             SWIFT_REGIONNAME: "{{ swift_cloud_regionname }}"
-            JOB_200_WHEN: "weekly"
-            JOB_300_WHAT: "dup full $$SRC $$DST"
+            JOB_300_WHAT: "mysqldump -h $$MYSQL_HOST -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE --result-file='$$SRC/mysql_$${MYSQL_HOST}_$$MYSQL_DATABASE.sql' && dup full $$SRC $$DST && rm '$$SRC/mysql_$${MYSQL_HOST}_$$MYSQL_DATABASE.sql'"
             JOB_300_WHEN: "weekly"
             JOB_302_WHAT: "dup remove-all-but-n-full 5 --force $$DST $$@"
             JOB_302_WHEN: "weekly"
-            JOB_700_WHEN: "weekly"
-            OPTIONS: "--allow-source-mismatch"
         volumes:
             - nextcloud_nextcloud:/mnt/backup/src/nextcloud:z
         networks:

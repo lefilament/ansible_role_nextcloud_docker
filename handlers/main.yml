@@ -2,9 +2,7 @@
 
 - name: start nextcloud docker
   docker_compose:
-    project_src: /home/docker/
-    files: nextcloud.yaml
-    project_name: nextcloud
+    project_src: /home/docker/nextcloud/
   async: 120
   poll: 10
   when: not ansible_check_mode

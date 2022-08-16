@@ -1,7 +1,7 @@
 ---
 ## MariaDB and NextCloud versions
-nextcloud_db_version: '10.5'
-nextcloud_version: '21'
+nextcloud_db_version: '10.8'
+nextcloud_version: '23'
 
 ## NextCloud URL
 cloud_url: "cloud.example.org"
@@ -12,6 +12,14 @@ cloud_db_pass: "veryUnsecurePassToBeModified"
 ## NextCloud Admin User / Password
 cloud_admin_user: "admin"
 cloud_admin_pass: "veryUnsecureAdminPassToBeModified"
+## OPTIONAL - For allowing NextCloud to reach extra URLs
+# extra_cloud_urls:
+#     - url: "mail.ovh.net"
+#       port: "465 587"
+## OPTIONAL - For setting extra vars in Nextcloud environment
+# extra_cloud_vars:
+#     - PHP_MEMORY_LIMIT=2G
+#     - PHP_UPLOAD_LIMIT=1G
 
 ## OPTIONAL - Collabora and/or OnlyOffice deployment options
 cloud_collabora: false

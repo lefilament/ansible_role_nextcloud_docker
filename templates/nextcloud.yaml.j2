@@ -20,8 +20,14 @@ services:
       - NEXTCLOUD_ADMIN_USER={{ cloud_admin_user }}
       - NEXTCLOUD_ADMIN_PASSWORD={{ cloud_admin_pass }}
       - REDIS_HOST=redis
+{% if extra_cloud_vars is defined %}
+{% for var in extra_cloud_vars %}
+      - {{ var }}
+{% endfor %}
+{% endif %}
     volumes:
       - nextcloud:/var/www/html:z
+      - ./nextcloud-extra.ini:/usr/local/etc/php/conf.d/nextcloud-extra.ini:ro
     networks:
       default:
       inverseproxy_shared:
@@ -127,6 +133,22 @@ services:
       TARGET: "push-notifications.nextcloud.com"
       PRE_RESOLVE: 1
     restart: unless-stopped
+{% for server in extra_cloud_urls %}
+
+  {{ server.url }}:
+    image: tecnativa/whitelist
+    container_name: nextcloud_{{ server.url }}
+    networks:
+      proxy:
+        aliases:
+          - "{{ server.url }}"
+      public:
+    environment:
+      PORT: "{{ server.port }}"
+      TARGET: "{{ server.url }}"
+      PRE_RESOLVE: 1
+    restart: unless-stopped
+{% endfor %}
 
 {% endif %}
 networks:
