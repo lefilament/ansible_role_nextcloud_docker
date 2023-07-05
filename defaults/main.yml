@@ -1,7 +1,7 @@
 ---
 ## MariaDB and NextCloud versions
 nextcloud_db_version: '10.8'
-nextcloud_version: '23'
+nextcloud_version: '24.0.5'
 
 ## NextCloud URL
 cloud_url: "cloud.example.org"

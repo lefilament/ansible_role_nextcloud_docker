@@ -14,7 +14,7 @@ Role Variables
 
 Variables from default directory :
 * nextcloud_db_version: MariaDB version to be deployed (defaults to 10.8)
-* nextcloud_version: NextCloud version to be deployed (defaults to 23)
+* nextcloud_version: NextCloud version to be deployed (defaults to 24.0.5)
 * cloud_url: URL on which NextCloud will be listening
 * cloud_db_root: Database root password
 * cloud_db_pass: Database password

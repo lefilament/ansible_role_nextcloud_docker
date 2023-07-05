@@ -1,5 +1,2 @@
-# Until https://github.com/Tecnativa/docker-duplicity/pull/324 is merged
-FROM remifilament/duplicity:latest
-# Once https://github.com/Tecnativa/docker-duplicity/pull/324 is merged
-# FROM ghcr.io/tecnativa/docker-duplicity:master
+FROM ghcr.io/tecnativa/docker-duplicity:master
 RUN apk add --no-cache mysql-client

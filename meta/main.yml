@@ -1,17 +1,17 @@
 ---
 galaxy_info:
-  author: Rémi
-  description: Role for deploying NextCloud on Docker with Collabora Online and/or OnlyOffice
-  company: Le Filament (https://le-filament.com)
-  license: AGPL-3.0-or-later
-  min_ansible_version: 2.1
-  platforms:
-    - name: Ubuntu
-      versions:
-        - bionic
-        - focal
-  galaxy_tags:
-    - nextcloud
-    - docker
-    - collabora
-    - onlyoffice
+    author: lefilament
+    description: Role for deploying NextCloud on Docker with Collabora Online and/or OnlyOffice
+    company: Le Filament (https://le-filament.com)
+    license: AGPL-3.0-or-later
+    min_ansible_version: "2.1"
+    platforms:
+        - name: Ubuntu
+          versions:
+              - bionic
+              - focal
+    galaxy_tags:
+        - nextcloud
+        - docker
+        - collabora
+        - onlyoffice
